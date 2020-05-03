@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "antd": "^3.26.6",
+    "axios": "^0.19.2",
     "babel-plugin-import": "^1.13.0",
     "customize-cra": "^0.9.1",
     "less": "^3.11.1",
@@ -15,7 +16,9 @@
     "react-app-rewired": "^2.1.6",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "store": "^2.0.12",
+    "moment": "latest"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -37,5 +40,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:5000"
 }
