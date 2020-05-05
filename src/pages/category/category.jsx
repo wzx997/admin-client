@@ -1,14 +1,18 @@
 import React, {Component} from "react";
-import {Card, Table, Button, Icon, message, Modal, Divider} from "antd";
+import {Card, Table, Button, Icon, message, Modal, Divider, Tooltip} from "antd";
 
 import LinkButton from "../../components/link-button";
-import {reqCategorys} from "../../api";
+import {reqCategorys, reqUpdateCategory, reqAddCategory} from "../../api";
+
+import AddForm from "./add-form";
+import UpdateForm from "./update-form";
 
 //商品分类组件
 class Category extends Component {
 
     state = {
         loading: true, // 是否正在获取数据中
+        confirmLoading: false, //点击确认后的按钮加载功能
         categorys: [], // 一级分类列表
         subCategorys: [], // 二级分类列表
         parentId: '0', // 当前需要显示的分类列表的父分类ID
@@ -102,6 +106,36 @@ class Category extends Component {
         this.setState({showStatus: 1});
     }
 
+    //添加分类
+    addCategory = () => {
+        this.form.validateFields((err, values) => {
+            if (!err) {
+                this.setState({confirmLoading: true});
+                const {parentId, categoryName} = values;
+                reqAddCategory(categoryName, parentId).then((res) => {
+                    if (res.status === 0){
+                        message.success('添加商品类型成功');
+                        this.setState({
+                            confirmLoading: false,
+                            showStatus: 0
+                        });
+                        this.form.resetFields();
+                        if(parentId === this.state.parentId) { // 添加的分类就是当前分类列表下的分类
+                            this.getCategorys()
+                        } else if (parentId==='0'){ // 在二级分类列表下添加一级分类, 重新获取一级分类列表, 但不需要显示一级列表
+                            this.getCategorys('0')
+                        }
+                    } else {
+                        this.setState({confirmLoading: false});
+                        message.error('添加商品类型失败');
+                    }
+                }).catch(_ => {
+                    this.setState({confirmLoading: false});
+                });
+            }
+        });
+    }
+
     //显示更新的模态框
     showUpdate = (category) => {
         // 保存操作对象，更新状态
@@ -109,10 +143,37 @@ class Category extends Component {
         this.setState({showStatus: 2});
     }
 
+    //更新分类
+    updateCategory = () => {
+        this.form.validateFields((err, values) => {
+            if (!err){
+                this.setState({confirmLoading: true});
+                const categoryId = this.category._id;
+                const {categoryName} = values;
+                reqUpdateCategory({categoryId,categoryName}).then(res => {
+                    if (res.status === 0){//更新成功，取消加载、关闭模态框，重置表单，重新请求页面
+                        message.success('更新商品类型成功');
+                        this.setState({
+                            confirmLoading: false,
+                            showStatus: 0
+                        });
+                        this.form.resetFields();
+                        this.getCategorys();
+                    } else {//更新失败，取消加载，弹框提示
+                        this.setState({confirmLoading: false});
+                        message.error('更新商品类型失败');
+                    }
+                }).catch(_ => {
+                    this.setState({confirmLoading: false});
+                });
+            }
+        });
+    }
+
     //响应点击取消: 隐藏确定框
     handleCancel = () => {
         // 清除输入数据
-        // this.form.resetFields()
+        this.form.resetFields()
         // 隐藏确认框
         this.setState({showStatus: 0});
     }
@@ -130,11 +191,15 @@ class Category extends Component {
 
 
     render() {
-        const {loading, categorys, subCategorys, parentId, parentName, showStatus,} = this.state;
+        const {loading, confirmLoading, categorys, subCategorys, parentId, parentName, showStatus,} = this.state;
+        const category = this.category || {} //读取指定的分类,如果还没有指定一个空对象
+
         // card的左侧
         const title = parentId === '0' ? '一级分类列表' : (
             <span>
-                <LinkButton onClick={this.showCategorys}>一级分类列表</LinkButton>
+                <Tooltip title="点击返回到一级分类列表">
+                    <LinkButton onClick={this.showCategorys}>一级分类列表</LinkButton>
+                </Tooltip>
                 <Icon type='arrow-right' style={{marginRight: 5}}/>
                 <span>{parentName}</span>
             </span>
@@ -159,19 +224,38 @@ class Category extends Component {
                 <Modal
                     title="添加分类"
                     visible={showStatus === 1}
-                    // onOk={this.addCategory}
+                    confirmLoading={confirmLoading}
+                    onOk={this.addCategory}
                     onCancel={this.handleCancel}
                 >
-
+                    <AddForm
+                        categorys={categorys}
+                        parentId={parentId}
+                        setForm={(form) => {this.form = form}}
+                    />
                 </Modal>
 
                 <Modal
                     title="更新分类"
                     visible={showStatus === 2}
-                    // onOk={this.updateCategory}
+                    confirmLoading={confirmLoading}
+                    onOk={this.updateCategory}
                     onCancel={this.handleCancel}
                 >
-
+                    <UpdateForm
+                        categoryName = {category ? category.name : ''}
+                        setForm={(form) => {this.form = form}}
+                        /*
+                            可以使用两种方式获取得到子组件的form的对象，一种是上面这种方法，
+                        子组件在钩子函数中直接将子组件this.props.form传给父组件，父组件可
+                        以根据上面的this.form来调用经过Form.create()包装后的方法，一种是
+                        下面这种，但是这样拿到的是完整的子组件对象，需要经过this.UpdateForm
+                        .props.form才可以拿到经过Form.create()包装后的方法。
+                            第一种主要写一个钩子函数-》组件将要加载的时候。在里面调用setForm
+                         方法，将this.props.form传递回来。
+                         */
+                        // wrappedComponentRef={(inst) => {this.UpdateForm = inst;}}
+                    />
                 </Modal>
             </div>
         );
