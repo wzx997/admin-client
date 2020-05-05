@@ -3,7 +3,7 @@
  */
 
 import axios from "axios";
-import {message} from 'antd';
+import {notification} from 'antd';
 
 export default function ajax(url, data={}, type='GET') {
     return new Promise(( resolve, reject) => {
@@ -23,7 +23,10 @@ export default function ajax(url, data={}, type='GET') {
         }).catch(error => {
             reject(error);
             console.log('出错了：' + error.message);
-            message.error('网络似乎出了一些问题......');
+            notification.error({
+                message: 'oh。网络开小差了~~~',
+                description: '当前请求无法完成，请检查你的网络或稍后再试，也可以联系管理员协助解决。'
+            });
         })
     })
 }
