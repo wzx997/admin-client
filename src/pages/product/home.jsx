@@ -113,10 +113,10 @@ class ProductHome extends Component{
     updateStatus = (productId, status) => {
         reqUpdateStatus(productId, status).then(res => {
             if(res.status===0) {
-                message.success('更新商品成功');
+                message.success('更新商品状态成功');
                 this.getProducts(this.pageNum);
             } else {
-                message.success('更新商品失败');
+                message.success('更新商品状态失败');
             }
         }).catch(err => {
             console.log(err);
