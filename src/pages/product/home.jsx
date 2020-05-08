@@ -69,7 +69,7 @@ class ProductHome extends Component{
                         通过this.props.location.state可以取出值
                         可以用大括号括起来传递一个对象，也可以单独传值*/}
                         <LinkButton onClick={() => this.props.history.push('/product/detail', {product})}>详情</LinkButton>
-                        <LinkButton>修改</LinkButton>
+                        <LinkButton onClick={() => this.props.history.push('/product/addupdate', product)}>修改</LinkButton>
                     </span>
                 )
 
@@ -161,7 +161,11 @@ class ProductHome extends Component{
 
         //定义card的额外信息
         const extra = (
-            <Button type='primary' icon="plus">
+            <Button
+                type='primary'
+                icon="plus"
+                onClick={() => this.props.history.push('/product/addupdate')}
+            >
                 添加商品
             </Button>
         );

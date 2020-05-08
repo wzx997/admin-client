@@ -3,7 +3,7 @@ import {Switch, Route, Redirect} from "react-router-dom";
 
 import "./product.less";
 import ProductHome from "./home";
-import ProductAddUpdate from "./addupdate";
+import ProductAddUpdate from "./addUpdate";
 import ProductDetail from "./detail";
 
 //商品组件
