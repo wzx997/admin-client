@@ -3,7 +3,7 @@ import {Card, Button, Table, Modal, message} from "antd";
 
 import memoryUtils from "../../utils/memoryUtils"
 import {formatDate} from "../../utils/dateUtils";
-// import storageUtils from "../../utils/storageUtils";
+import storageUtils from "../../utils/storageUtils";
 import {PAGE_SIZE} from "../../utils/constants";
 import {reqRoles, reqAddRole, reqUpdateRole} from "../../api";
 
@@ -113,14 +113,27 @@ class Role extends Component{
 
         reqUpdateRole(role).then(res => {
             if (res.status === 0) {
-                message.success('设置角色权限成功');
-
-                //可以直接请求接口获取最新的数据或者更新state中的roles
-                this.setState({
-                    roles: [...this.state.roles],
-                    confirmLoading: false,
-                    isShowAuth: false
-                });
+                if (role._id === memoryUtils.user.role_id) {
+                    memoryUtils.user = {}
+                    storageUtils.removeUser()
+                    this.props.history.replace('/login')
+                    message.success('当前用户角色权限成功，请重新登录')
+                } else {
+                    message.success('设置角色权限成功')
+                    this.setState({
+                        roles: [...this.state.roles],
+                        confirmLoading: false,
+                        isShowAuth: false
+                    })
+                }
+                // message.success('设置角色权限成功');
+                //
+                // //可以直接请求接口获取最新的数据或者更新state中的roles
+                // this.setState({
+                //     roles: [...this.state.roles],
+                //     confirmLoading: false,
+                //     isShowAuth: false
+                // });
             } else {
                 message.success('设置角色权限失败');
                 this.setState({confirmLoading: false});

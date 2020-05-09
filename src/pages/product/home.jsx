@@ -109,7 +109,7 @@ class ProductHome extends Component{
         });
     }
 
-    // 更新指定商品的状态
+    // 更新指定商品的状态,上架还是下架
     updateStatus = (productId, status) => {
         reqUpdateStatus(productId, status).then(res => {
             if(res.status===0) {
