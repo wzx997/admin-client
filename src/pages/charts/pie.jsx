@@ -1,16 +1,14 @@
 import React, {Component} from "react";
 
-/**
- * 后台管理的路由组件
- */
-class Admin extends Component{
+//饼图组件
+class Pie extends Component{
     render() {
         return (
             <div>
-                admin
+                饼图组件
             </div>
         );
     }
 }
 
-export default Admin;
+export default Pie;
