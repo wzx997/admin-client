@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Card, Table, Button, Icon, message, Modal, Divider, Tooltip} from "antd";
 
 import LinkButton from "../../components/link-button";
-import {reqCategorys, reqUpdateCategory, reqAddCategory} from "../../api";
+import {reqCategorys, reqUpdateCategory, reqAddCategory, test} from "../../api";
 
 import AddForm from "./add-form";
 import UpdateForm from "./update-form";
