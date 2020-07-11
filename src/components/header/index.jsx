@@ -55,11 +55,11 @@ class Header extends Component{
             content: '确定退出吗?',
             onOk: () => {
                 // 删除保存的user数据
-                storageUtils.removeUser()
-                memoryUtils.user = {}
+                storageUtils.removeUser();
+                memoryUtils.user = {};
 
                 // 跳转到login
-                this.props.history.replace('/login')
+                this.props.history.replace('/login');
             }
         });
     }
