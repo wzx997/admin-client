@@ -66,7 +66,7 @@ class Category extends Component {
                     this.setState({
                         subCategorys: categorys,
                         loading: false
-                    })
+                    });
                 }
             } else {
                 this.setState({loading: false});
@@ -192,7 +192,7 @@ class Category extends Component {
 
     render() {
         const {loading, confirmLoading, categorys, subCategorys, parentId, parentName, showStatus,} = this.state;
-        const category = this.category || {} //读取指定的分类,如果还没有指定一个空对象
+        const category = this.category || {}; //读取指定的分类,如果还没有指定一个空对象
 
         // card的左侧
         const title = parentId === '0' ? '一级分类列表' : (
@@ -203,10 +203,10 @@ class Category extends Component {
                 <Icon type='arrow-right' style={{marginRight: 5}}/>
                 <span>{parentName}</span>
             </span>
-        )
+        );
 
         // card的右侧
-        const extra = <Button type='primary' icon="plus" onClick={this.showAdd}>添加</Button>
+        const extra = <Button type='primary' icon="plus" onClick={this.showAdd}>添加</Button>;
 
         return (
             <div>
