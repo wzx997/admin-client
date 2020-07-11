@@ -91,9 +91,9 @@ class LeftNav extends Component {
                             key={item.key}
                             title={
                                 <span>
-                                <Icon type={item.icon}/>
-                                <span>{item.title}</span>
-                            </span>
+                                    <Icon type={item.icon}/>
+                                    <span>{item.title}</span>
+                                </span>
                             }
                         >
                             {this.getMenuNodes(item.children)}
@@ -107,7 +107,7 @@ class LeftNav extends Component {
     }
 
     componentWillMount () {
-        this.menuNodes = this.getMenuNodes(menuList)
+        this.menuNodes = this.getMenuNodes(menuList);
     }
 
     render() {
@@ -115,11 +115,11 @@ class LeftNav extends Component {
         let path = this.props.location.pathname;
 
         if(path.indexOf('/product')===0) { // 当前请求的是商品或其子路由界面
-            path = '/product'
+            path = '/product';
         }
 
         // 得到需要打开菜单项的key
-        const openKey = this.openKey
+        const openKey = this.openKey;
 
         return (
             <div className="left-nav">
