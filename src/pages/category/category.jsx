@@ -120,11 +120,18 @@ class Category extends Component {
                             showStatus: 0
                         });
                         this.form.resetFields();
-                        if(parentId === this.state.parentId) { // 添加的分类就是当前分类列表下的分类
-                            this.getCategorys()
-                        } else if (parentId==='0'){ // 在二级分类列表下添加一级分类, 重新获取一级分类列表, 但不需要显示一级列表
-                            this.getCategorys('0')
+                        if(parentId === this.state.parentId) {
+                            // 添加的分类就是当前分类列表下的分类，即在该分类下面添加子分类，这时需要更新
+                            // 重新加载这个父分类下面的类别
+                            // 两种情况：在一级列表下添加一级分类，在二级列表下添加该二级列表的子分类，都需要重新加载
+                            this.getCategorys();
+                        } else if (parentId==='0'){
+                            // 在二级分类列表下添加一级分类, 重新获取一级分类列表, 但不需要刷新当前显示的二级列表
+                            // 重新获取的目的的是为了回退的时可见
+                            this.getCategorys('0');
                         }
+                        //其他情况1：在一级列表添加二级列表的选项，这时候不用发请求，因为查看二级列表的时候会单独发请求
+                        //其他情况2：在二级列表添加其他二级列表的选项，这时候也不用发请求，因为查看二级列表的时候会单独发请求
                     } else {
                         this.setState({confirmLoading: false});
                         message.error('添加商品类型失败');
