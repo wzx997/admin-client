@@ -78,7 +78,7 @@ class LeftNav extends Component {
                         </Menu.Item>
                     ));
                 } else {
-                    // 查找一个与当前请求路径匹配的子Item
+                    // 查找一个与当前请求路径匹配的子Item，用找下标的方法是解决产品子路由即详细等页面的刷新打开问题
                     const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0);
                     // const cItem = item.children.find(cItem => cItem.key === path);
                     // 如果存在, 说明当前item的子列表需要打开
@@ -114,6 +114,7 @@ class LeftNav extends Component {
         // 得到当前请求的路由路径
         let path = this.props.location.pathname;
 
+        //找下标的方式是解决产品子路由的选中问题
         if(path.indexOf('/product')===0) { // 当前请求的是商品或其子路由界面
             path = '/product';
         }
