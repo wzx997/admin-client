@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Card, Table, Button, Icon, message, Modal, Divider, Tooltip} from "antd";
+import {Card, Table, Button, Icon, message, Modal, Divider, Tooltip, notification} from "antd";
 
 import LinkButton from "../../components/link-button";
 import {reqCategorys, reqUpdateCategory, reqAddCategory} from "../../api";
@@ -108,7 +108,7 @@ class Category extends Component {
 
     //添加分类
     addCategory = () => {
-        this.form.validateFields((err, values) => {
+        this.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 this.setState({confirmLoading: true});
                 const {parentId, categoryName} = values;
@@ -139,6 +139,12 @@ class Category extends Component {
                 }).catch(_ => {
                     this.setState({confirmLoading: false});
                 });
+            } else {
+                notification.error({
+                        message: '发生了一些错误！！！',
+                        description: '请确信息填写完成。'
+                    }
+                );
             }
         });
     }
@@ -152,7 +158,7 @@ class Category extends Component {
 
     //更新分类
     updateCategory = () => {
-        this.form.validateFields((err, values) => {
+        this.form.validateFieldsAndScroll((err, values) => {
             if (!err){
                 this.setState({confirmLoading: true});
                 const categoryId = this.category._id;
@@ -173,6 +179,12 @@ class Category extends Component {
                 }).catch(_ => {
                     this.setState({confirmLoading: false});
                 });
+            } else {
+                notification.error({
+                        message: '发生了一些错误！！！',
+                        description: '请确信息填写完成。'
+                    }
+                );
             }
         });
     }

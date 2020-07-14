@@ -58,7 +58,7 @@ class PicturesWall extends React.Component {
 
     // 监听上传中的文件变化
     handleChange = ({ file, fileList}) => {
-        console.log(file.status);
+        console.log(file);
         // 一旦上传成功, 将当前上传的file的信息修正(name, url)
         if(file.status==='done') {
             const result = file.response;  // {status: 0, data: {name: 'xxx.jpg', url: '图片地址'}}
