@@ -7,6 +7,7 @@ import {PAGE_SIZE} from "../../utils/constants";
 import {reqUsers, reqDeleteUser, reqAddOrUpdateUser} from "../../api";
 
 import UserForm from "./userForm";
+import memoryUtils from "../../utils/memoryUtils";
 
 //用户组件
 class User extends Component{
@@ -89,16 +90,22 @@ class User extends Component{
         Modal.confirm({
             title: `确认删除用户：${user.username} 吗?`,
             onOk:  () => {
-                reqDeleteUser(user._id).then( res => {
-                    if(res.status===0) {
-                        message.success('删除用户成功');
-                        this.getUsers();
-                    } else {
-                        message.success('删除用户失败');
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                })
+                // 功能修正，不能删除自己
+                const username = memoryUtils.user.username;
+                if (username === user.username) {
+                    message.error('删除用户失败,不支持删除自己！');
+                } else {
+                    reqDeleteUser(user._id).then( res => {
+                        if(res.status===0) {
+                            message.success('删除用户成功');
+                            this.getUsers();
+                        } else {
+                            message.success('删除用户失败');
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                }
             }
         })
     }
