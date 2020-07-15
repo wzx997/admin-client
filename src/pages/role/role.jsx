@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Card, Button, Table, Modal, message} from "antd";
+import {Card, Button, Table, Modal, message, notification} from "antd";
 
 import memoryUtils from "../../utils/memoryUtils"
 import {formatDate} from "../../utils/dateUtils";
@@ -98,6 +98,12 @@ class Role extends Component{
                 }).catch(() => {
                     this.setState({confirmLoading: false});
                 });
+            } else {
+                notification.error({
+                        message: '发生了一些错误！！！',
+                        description: '请确信息填写完成。'
+                    }
+                );
             }
         });
     }
@@ -105,6 +111,8 @@ class Role extends Component{
     // 更新角色
     updateRole = () => {
         this.setState({confirmLoading: true});
+        // 状态中存入role就是选择的role，即需要更新的role，这是一个应用变量，也关联到了roles数组上
+        // 它的改变也会带来整个数组的改变
         const role = this.state.role;
         const menus = this.auth.getMenus();
         role.menus = menus;

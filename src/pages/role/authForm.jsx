@@ -36,6 +36,7 @@ class AuthForm extends PureComponent {
 
     // 选中某个node时的回调
     onCheck = checkedKeys => {
+        // 所有选中key的数组
         // console.log('onCheck', checkedKeys);
         this.setState({checkedKeys});
     };
