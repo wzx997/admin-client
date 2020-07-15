@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Card, Button, Table, Modal, message} from "antd";
+import {Card, Button, Table, Modal, message, notification} from "antd";
 
 import LinkButton from "../../components/link-button";
 import {formatDate} from "../../utils/dateUtils";
@@ -124,7 +124,7 @@ class User extends Component{
 
     // 处理更新或者操作的提交
     addOrUpdateUser = () => {
-        this.UpdateForm.props.form.validateFields((err, values) => {
+        this.UpdateForm.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 this.setState({confirmLoading: true});
 
@@ -147,6 +147,12 @@ class User extends Component{
                 }).catch(() => {
                     this.setState({confirmLoading: false});
                 });
+            } else {
+                notification.error({
+                        message: '发生了一些错误！！！',
+                        description: '请确信息填写完成。'
+                    }
+                );
             }
         });
     }

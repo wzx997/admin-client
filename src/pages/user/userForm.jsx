@@ -9,7 +9,7 @@ const Option = Select.Option;
  */
 class UserForm extends PureComponent {
 
-    //动态验证密码
+    //动态验证密码 ：方法弃用，如果指定了动态验证，则验证不通过将不会报错
     validatePwd = (rule, value, callback) => {
         if (value.length<4) {;
             callback('密码长度不能小于4位')
@@ -52,7 +52,9 @@ class UserForm extends PureComponent {
                         {getFieldDecorator('password', {
                             initialValue: user.password,
                             rules: [{ required: true, message: '用户名必须输入' },
-                                {validator: this.validatePwd},
+                                { min: 4, message: '用户名至少4位' },
+                                { max: 12, message: '用户名最多12位' },
+                                { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名必须是英文、数字或下划线组成' },
                             ]
                         })(
                             <Input.Password type='password' placeholder='请输入密码'/>
@@ -68,6 +70,7 @@ class UserForm extends PureComponent {
                         <Input placeholder='请输入手机号'/>
                     )}
                 </FormItem>
+
                 <FormItem label='邮箱'>
                     {getFieldDecorator('email', {
                         initialValue: user.email || '',
