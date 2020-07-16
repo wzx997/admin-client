@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Card, Table, Button, Icon, message, Modal, Divider, Tooltip} from "antd";
+import {Card, Table, Button, Icon, message, Modal, Divider, Tooltip, notification} from "antd";
 
 import LinkButton from "../../components/link-button";
 import {reqCategorys, reqUpdateCategory, reqAddCategory} from "../../api";
@@ -66,7 +66,7 @@ class Category extends Component {
                     this.setState({
                         subCategorys: categorys,
                         loading: false
-                    })
+                    });
                 }
             } else {
                 this.setState({loading: false});
@@ -108,7 +108,7 @@ class Category extends Component {
 
     //添加分类
     addCategory = () => {
-        this.form.validateFields((err, values) => {
+        this.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 this.setState({confirmLoading: true});
                 const {parentId, categoryName} = values;
@@ -120,11 +120,18 @@ class Category extends Component {
                             showStatus: 0
                         });
                         this.form.resetFields();
-                        if(parentId === this.state.parentId) { // 添加的分类就是当前分类列表下的分类
-                            this.getCategorys()
-                        } else if (parentId==='0'){ // 在二级分类列表下添加一级分类, 重新获取一级分类列表, 但不需要显示一级列表
-                            this.getCategorys('0')
+                        if(parentId === this.state.parentId) {
+                            // 添加的分类就是当前分类列表下的分类，即在该分类下面添加子分类，这时需要更新
+                            // 重新加载这个父分类下面的类别
+                            // 两种情况：在一级列表下添加一级分类，在二级列表下添加该二级列表的子分类，都需要重新加载
+                            this.getCategorys();
+                        } else if (parentId==='0'){
+                            // 在二级分类列表下添加一级分类, 重新获取一级分类列表, 但不需要刷新当前显示的二级列表
+                            // 重新获取的目的的是为了回退的时可见
+                            this.getCategorys('0');
                         }
+                        //其他情况1：在一级列表添加二级列表的选项，这时候不用发请求，因为查看二级列表的时候会单独发请求
+                        //其他情况2：在二级列表添加其他二级列表的选项，这时候也不用发请求，因为查看二级列表的时候会单独发请求
                     } else {
                         this.setState({confirmLoading: false});
                         message.error('添加商品类型失败');
@@ -132,6 +139,12 @@ class Category extends Component {
                 }).catch(_ => {
                     this.setState({confirmLoading: false});
                 });
+            } else {
+                notification.error({
+                        message: '发生了一些错误！！！',
+                        description: '请确信息填写完成。'
+                    }
+                );
             }
         });
     }
@@ -145,7 +158,7 @@ class Category extends Component {
 
     //更新分类
     updateCategory = () => {
-        this.form.validateFields((err, values) => {
+        this.form.validateFieldsAndScroll((err, values) => {
             if (!err){
                 this.setState({confirmLoading: true});
                 const categoryId = this.category._id;
@@ -166,6 +179,12 @@ class Category extends Component {
                 }).catch(_ => {
                     this.setState({confirmLoading: false});
                 });
+            } else {
+                notification.error({
+                        message: '发生了一些错误！！！',
+                        description: '请确信息填写完成。'
+                    }
+                );
             }
         });
     }
@@ -192,7 +211,7 @@ class Category extends Component {
 
     render() {
         const {loading, confirmLoading, categorys, subCategorys, parentId, parentName, showStatus,} = this.state;
-        const category = this.category || {} //读取指定的分类,如果还没有指定一个空对象
+        const category = this.category || {}; //读取指定的分类,如果还没有指定一个空对象
 
         // card的左侧
         const title = parentId === '0' ? '一级分类列表' : (
@@ -203,10 +222,10 @@ class Category extends Component {
                 <Icon type='arrow-right' style={{marginRight: 5}}/>
                 <span>{parentName}</span>
             </span>
-        )
+        );
 
         // card的右侧
-        const extra = <Button type='primary' icon="plus" onClick={this.showAdd}>添加</Button>
+        const extra = <Button type='primary' icon="plus" onClick={this.showAdd}>添加</Button>;
 
         return (
             <div>

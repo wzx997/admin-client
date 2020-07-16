@@ -41,6 +41,8 @@ class ProductHome extends Component{
                 width: 130,
                 title: '状态',
                 // dataIndex: 'status',
+                // 如果指定的dataIndex属性，则render函数中的形参就是这条数据对应的该属性值
+                // 如果没有指定这个属性，则render函数中的形参就是这条数据
                 render: (product) => {
                     //状态为1：在售中，状态为2：已下架
                     const {status, _id} = product;
@@ -79,7 +81,7 @@ class ProductHome extends Component{
 
     //请求商品列表接口
     getProducts = (pageNum) => {
-        this.pageNum = pageNum; // 保存pageNum, 让其它方法可以看到
+        this.pageNum = pageNum; // 保存pageNum, 让其它方法可以看到，例如更新商品状态重新请求以及分页那里
         this.setState({loading: true}); // 显示loading
 
         const {searchName, searchType} = this.state;
@@ -136,7 +138,6 @@ class ProductHome extends Component{
     render() {
         // 取出状态数据
         const {products, total, loading, searchType, searchName} = this.state;
-
 
         //定义card的标题
         const title = (

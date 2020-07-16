@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Card, Icon, Form, Input, Cascader, Button, message, Tooltip} from "antd";
+import {Card, Icon, Form, Input, Cascader, Button, message, Tooltip, notification} from "antd";
 
 import LinkButton from "../../components/link-button";
 import PicturesWall from "./picturesWall";
@@ -73,8 +73,7 @@ class ProductAddUpdate extends Component{
             }
         }).catch((err) => {
             console.log(err);
-        })
-        ;
+        });
     }
 
     // 用加载下一级列表的回调函数
@@ -101,7 +100,7 @@ class ProductAddUpdate extends Component{
 
     //表单验证，数据提交，发送请求
     handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 this.setState({confirmLoading: true});
                 const {name, desc, price, categoryIds} = values;
@@ -136,6 +135,12 @@ class ProductAddUpdate extends Component{
                 }).catch(_ => {
                     this.setState({confirmLoading: false});
                 });
+            } else {
+                notification.error({
+                        message: '发生了一些错误！！！',
+                        description: '请确信息填写完成。'
+                    }
+                );
             }
         });
     }
@@ -212,7 +217,7 @@ class ProductAddUpdate extends Component{
                 </LinkButton>
                 <span>{isUpdate ? '修改商品' : '添加商品'}</span>
             </span>
-        )
+        );
 
         return (
             <Card title={title}>
@@ -287,3 +292,11 @@ class ProductAddUpdate extends Component{
 }
 
 export default Form.create()(ProductAddUpdate);
+
+/*
+1、子组件调用父组件的方法：将父组件的方法以属性的形式传递给子组件，子组件通过this.props.方法名就取到方法进行调用
+2、父组件调用子组件的方法：方法1：在父组件中引用子组件的时候增加ref属性拿到子组件的对象。ref可以通过函数指定，例如
+ref={pw => this.pw = pw}，然后父组件就可渠道子组件对象，进而进行方法调用。方式2：在父组件的的构造函数中指定
+this.editor = React.createRef();这是子组件中指定ref={this.editor}，这种方式取值则是通过this.editor.current.
+方法名才能取到具体的方法进而进行调用的。
+ */
